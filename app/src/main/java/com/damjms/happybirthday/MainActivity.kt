@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -17,14 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.unit.sp
 
 
@@ -36,17 +36,19 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Greeting("Android")
+                Greeting()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String) {
-    Box (
-        modifier = Modifier.fillMaxSize()
-    ){
+fun Greeting() {
+    Box (modifier = Modifier.fillMaxSize()){
+        //rememberSaveable por si rota la pantalla
+        var texto by rememberSaveable { mutableStateOf("") }
+        var nombre by rememberSaveable { mutableStateOf("") }
         Image(
             painter = painterResource(id = R.drawable.androidparty),
             contentDescription = "fondo",
@@ -59,12 +61,22 @@ fun Greeting(name: String) {
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(
-                text = "Hello $name!",
+                text = "Ingresa tu nombre",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 fontStyle = FontStyle.Italic
             )
-            Text(text = "Adios")
+
+            OutlinedTextField(
+                value = texto,
+                onValueChange = {texto = it},
+                label = { Text(text = "Introduce nombre")}
+            )
+
+            Button(onClick = { nombre = texto }) {
+                Text(text = "PULSAME")
+            }
+            Text(text = nombre, textAlign = TextAlign.Center)
         }
     }
 }
